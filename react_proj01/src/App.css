@@ -1,0 +1,7 @@
+@import "tailwindcss";
+#root {
+  padding: 2rem;
+  text-align: center;
+  background-color: beige;
+}
+
