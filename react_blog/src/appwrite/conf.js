@@ -130,3 +130,5 @@ export class Service {
         )
     }
 }
+
+export const appWriteService=new Service()

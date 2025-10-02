@@ -44,10 +44,11 @@ export class AuthService{
     async login({email,password}){
         return this.account.createEmailPasswordSession({email,password})
     }
-    async getUsers(){
+    async getUser(){
         try {
-            return this.account.getSession()
+            return this.account.get()
         } catch (error) {
+            console.log(error)
             console.log("Error:: getUser error");
             
         }
