@@ -5,56 +5,63 @@ import App from './App.jsx'
 import { Provider } from 'react-redux'
 import { store } from './store/store.js'
 import { createBrowserRouter } from 'react-router-dom'
-import {AuthLayout} from "./components/index.js"
-
-const router=createBrowserRouter([
+import { AuthLayout } from "./components/index.js"
+import { Login, Home, AllPosts, EditPost, AddPost, Signup,Post } from "./Pages"
+import { RouterProvider } from 'react-router-dom'
+const router = createBrowserRouter([
   {
-    path:'/',
-    element:<App/>,
-    children:[
+    path: '/',
+    element: <App />,
+    children: [
       {
-        path:"/login",
-        element:(
+        path: "/login",
+        element: (
           <AuthLayout authentication={false} >
             <Login></Login>
           </AuthLayout>
         )
       },
       {
-        path:"/",
-        element: <Home/>
+        path: "/",
+        element: <Home />
       },
       {
-        path:"/signup",
-        element:(
+        path: "/signup",
+        element: (
           <AuthLayout authentication={false} >
             <Signup></Signup>
           </AuthLayout>
         )
       },
       {
-        path:"/add-post",
-        element:(
-          <AuthLayout authentication={false} >
-            <Login></Login>
+        path: "/add-post",
+        element: (
+          <AuthLayout authentication={true} >
+            <AddPost />
           </AuthLayout>
         )
       },
       {
-        path:"/all-posts",
-        element:(
-          <AuthLayout authentication={false} >
-            <Login></Login>
+        path: "/all-posts",
+        element: (
+          <AuthLayout authentication={true} >
+            <AllPosts></AllPosts>
           </AuthLayout>
         )
       },
       {
-        path:"/login",
-        element:(
-          <AuthLayout authentication={false} >
-            <Login></Login>
+        path: "/edit-post/:slug",
+        element: (
+          <AuthLayout authentication={true} >
+            <EditPost />
           </AuthLayout>
         )
+      },
+      {
+        path: "/post/:slug",
+        element: <Post />
+
+
       },
     ]
   }
@@ -63,7 +70,7 @@ const router=createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-    <App />
+      <RouterProvider router={router}/>
     </Provider>
   </StrictMode>,
 )

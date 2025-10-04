@@ -3,6 +3,7 @@ import { appWriteService } from '../appwrite/conf'
 import { PostForm,Container } from '../components'
 import { useNavigate, useParams } from 'react-router-dom'
 
+
 function EditPost() {
     const navigate=useNavigate()
     const [post,setPost]=useState([])

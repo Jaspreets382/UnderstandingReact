@@ -5,6 +5,7 @@ import './App.css'
 import { useDispatch } from 'react-redux'
 import { login, logout } from './store/auth';
 import authService from './appwrite/authService';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   const [loading,setLoading]=useState(true)
@@ -25,7 +26,7 @@ function App() {
 
   return loading?<div className='bg-amber-500'>
     <Header></Header>
-    <div>hello</div>
+    <Outlet></Outlet>
     <Footer></Footer>
 
   </div>:null
