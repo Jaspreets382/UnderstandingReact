@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { appWriteService } from '../appwrite/conf'
 import { PostForm, Container, PostCard } from '../components'
-import { AppwriteException } from 'appwrite'
 
 function AllPosts() {
     const [posts, setPosts] = useState([])
     useEffect(() => {
-        appWriteService.getAllPosts([]).then((posts) => {
+        appWriteService.getAllPosts().then((posts) => {
             if (posts) {
                 setPosts(posts.documents)
             }

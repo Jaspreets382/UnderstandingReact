@@ -15,7 +15,7 @@ function App() {
     authService.getUser()
     .then((userData)=>{
       if(userData)
-        dispatch(login(userData))
+        dispatch(login({userData}))
       else
         dispatch(logout())
     })
@@ -24,12 +24,12 @@ function App() {
 
   },[])
 
-  return loading?<div className='bg-amber-500'>
+  return <div className='bg-amber-500'>
     <Header></Header>
     <Outlet></Outlet>
     <Footer></Footer>
 
-  </div>:null
+  </div>
 }
 
 export default App

@@ -10,7 +10,7 @@ import { login as authLogin } from '../store/auth'
 
 function Signup() {
     const [error, setError] = useState('')
-    const { register, handleSubmit } = useForm()
+    const {register,handleSubmit} = useForm() 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -20,12 +20,13 @@ function Signup() {
             const created = await authService.createAccount(data)
             if (created) {
                 const userData = await authService.getUser()
-                if (userData) dispatch(authService.login(userData))
+                console.log("Dispatching login...");
+                if (userData) dispatch(authLogin(userData))
                 navigate("/")
             }
 
         } catch (error) {
-            setError(error)
+            setError(error.message)
         }
     }
     return (

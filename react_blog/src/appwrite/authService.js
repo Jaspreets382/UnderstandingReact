@@ -27,10 +27,10 @@ export class AuthService{
         this.account=new Account(this.client)
     }
     async  createAccount({email,password,name}){
-       try{const userAccount= await this.account.create({id:ID.unique(),email,password,name})
+       try{const userAccount= await this.account.create({userId:ID.unique(),email,password,name})
        if(userAccount){
         //calls login function
-        login(email,password)
+        this.login(email,password)
        }
        else{
         return userAccount
@@ -42,11 +42,11 @@ export class AuthService{
     }
     }
     async login({email,password}){
-        return this.account.createEmailPasswordSession({email,password})
+        return await this.account.createEmailPasswordSession({email,password})
     }
     async getUser(){
         try {
-            return this.account.get()
+            return await this.account.get()
         } catch (error) {
             console.log(error)
             console.log("Error:: getUser error");
@@ -58,7 +58,7 @@ export class AuthService{
     }
     async logout(){
         try {
-            return this.account.deleteSessions()
+            return await this.account.deleteSessions()
         } catch (error) {
             console.log('error:: logout error');
             

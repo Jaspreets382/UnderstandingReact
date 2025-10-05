@@ -15,9 +15,12 @@ function PostForm({ post }) {
             status: post?.status || "active",
         }
     })
-
-    const userData = useSelector((state) => state.user.userData)
-
+const userData = useSelector((state) => {
+    console.log("Full state:", state);
+    console.log("Auth state:", state.auth);
+    console.log(state.auth.userdata)
+    return state.auth.userdata;
+});
     const submit = async (data) => {
         if (post) {
             const file = await data.image[0] ? appWriteService.uploadFile(data.image[0]) : null;
@@ -41,6 +44,7 @@ function PostForm({ post }) {
                     ...data,
                     userId: userData.$id
                 })
+                
                 if (dbPost) {
                     navigate(`/post${dbPost.$id}`)
                 }
@@ -48,26 +52,26 @@ function PostForm({ post }) {
 
         }
     }
-    const sulgTransform = useCallback((value) => {
-        if (value && typeof value === 'String')
+    const slugTransform = useCallback((value) => {
+        if (value && typeof value === 'string')
             return value
                 .trim()
                 .toLowerCase()
-                .replace(/^[\a-z\A-Z\d]+/g, '-')
-
+                .replace(/[^a-zA-Z0-9]+/g, '-') // Replace non-alphanumeric chars with hyphen
+            .replace(/^-+|-+$/g, '');
         return ''
     }, [])
     useEffect(() => {
         const subscription = watch(
             (value, { name }) => {
                 if (name === "title") {
-                    setValue('slug', sulgTransform(value.title,
+                    setValue('slug', slugTransform(value.title,
                         { shouldValidate: true }))
                 }
             }
         )
         return () => { subscription.unsubscribe() }
-    }, [watch, sulgTransform, setValue])
+    }, [watch, slugTransform, setValue])
     return (
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
             <div className="w-2/3 px-2">
@@ -99,7 +103,7 @@ function PostForm({ post }) {
                 {post && (
                     <div className="w-full mb-4">
                         <img
-                            src={appwriteService.getFilePreview(post.featuredImage)}
+                            src={appWriteService.getFilePrev(post.featuredImage)}
                             alt={post.title}
                             className="rounded-lg"
                         />
@@ -111,7 +115,7 @@ function PostForm({ post }) {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
+                <Button type="submit" bgColor={post ? "bg-green-500" : ''} className="w-full">
                     {post ? "Update" : "Submit"}
                 </Button>
             </div>

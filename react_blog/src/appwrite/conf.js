@@ -1,5 +1,5 @@
 import config from "../config";
-import { Client, ID, Databases, Storage, Query, TablesDB } from "appwrite";
+import { Client, ID, Databases, Storage, Query, } from "appwrite";
 
 export class Service {
     client = new Client()
@@ -28,7 +28,7 @@ export class Service {
             )
 
         } catch (error) {
-            console.log('Service:: createPost Error');
+            console.log(error.message)
 
         }
     }
@@ -47,7 +47,7 @@ export class Service {
             )
 
         } catch (error) {
-            console.log('Service:: updatepost error');
+            console.log(error.message)
 
         }
 
@@ -62,7 +62,7 @@ export class Service {
             )
             return true
         } catch (error) {
-            console.log('Service::deletePost error')
+            console.log(error.message)
             return false
         }
     }
@@ -76,7 +76,7 @@ export class Service {
 
             )
         } catch (error) {
-            console.log('Service::getPost error')
+            console.log(error.message)
             return false
         }
     }
@@ -93,7 +93,7 @@ export class Service {
             )
 
         } catch (error) {
-            console.log('Service::AllPost error')
+            console.log(error.message)
         }
     }
 
