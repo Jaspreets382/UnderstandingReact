@@ -15,39 +15,56 @@ function PostForm({ post }) {
             status: post?.status || "active",
         }
     })
-const userData = useSelector((state) => {
-    console.log("Full state:", state);
-    console.log("Auth state:", state.auth);
-    console.log(state.auth.userdata)
-    return state.auth.userdata;
-});
+    const userData = useSelector((state) => {
+        console.log("Full state:", state);
+        console.log("Auth state:", state.auth);
+        console.log(state.auth.userdata)
+        return state.auth.userdata;
+    });
     const submit = async (data) => {
-        if (post) {
-            const file = await data.image[0] ? appWriteService.uploadFile(data.image[0]) : null;
-            if (file) {
-                appWriteService.deleteFile(post.featuredImage)
-            }
-            const dbPost = await appWriteService.updatePost(post.$id, {
-                ...data,
-                featuredImage: file ? file.$id : undefined,
-            })
-            if (dbPost) {
-                navigate(`/post${dbPost.$id}`)
-            }
-        }
-        else {
-            const file = await data.image[0] ? appWriteService.uploadFile(data.image[0]) : null; //todo change the logic
-            if (file) {
-                const fileId = file.$id
-                data.featuredImage = fileId
-                const dbPost = await appWriteService.createPost({
-                    ...data,
-                    userId: userData.$id
-                })
-                
-                if (dbPost) {
-                    navigate(`/post${dbPost.$id}`)
+        try {
+            if (post) {
+                const file = data.image[0] ? await appWriteService.uploadFile(data.image[0]) : null;
+
+                if (file) {
+                    appWriteService.deleteFile(post.featuredImage)
                 }
+                const dbPost = await appWriteService.updatePost(post.$id, {
+                    ...data,
+                    featuredImage: file ? file.$id : undefined,
+                })
+                if (dbPost) {
+                    navigate(`/post/${dbPost.$id}`)
+                }
+            }
+            else {
+                console.log(data)
+
+                const file = data.image[0] ? await appWriteService.uploadFile(data.image[0]) : null;
+                console.log(file) //todo change the logic
+                if (file) {
+                    // console.log(file)
+                    const fileId = file.$id
+                    data.featuredImage = fileId
+                    console.log(userData.userData.$id)
+                    const dbPost = await appWriteService.createPost({
+                        ...data,
+                        userId: userData.userData.$id
+
+                    })
+
+                    if (dbPost) {
+                        navigate(`/post/${dbPost.$id}`)
+                        console.log("done")
+                    }
+                }
+
+            }
+        } catch (error) {
+            if (error.code === 401) {
+                // Session expired or user not logged in
+                navigate('/login');
+                return;
             }
 
         }
@@ -58,7 +75,7 @@ const userData = useSelector((state) => {
                 .trim()
                 .toLowerCase()
                 .replace(/[^a-zA-Z0-9]+/g, '-') // Replace non-alphanumeric chars with hyphen
-            .replace(/^-+|-+$/g, '');
+                .replace(/^-+|-+$/g, '');
         return ''
     }, [])
     useEffect(() => {
@@ -86,9 +103,10 @@ const userData = useSelector((state) => {
                     placeholder="Slug"
                     className="mb-4"
                     {...register("slug", { required: true })}
-                    onInput={(e) => {
+                    onChange={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
                     }}
+
                 />
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
             </div>
@@ -100,7 +118,7 @@ const userData = useSelector((state) => {
                     accept="image/png, image/jpg, image/jpeg, image/gif"
                     {...register("image", { required: !post })}
                 />
-                {post && (
+                {post && post.featuredImage && (
                     <div className="w-full mb-4">
                         <img
                             src={appWriteService.getFilePrev(post.featuredImage)}
@@ -118,6 +136,7 @@ const userData = useSelector((state) => {
                 <Button type="submit" bgColor={post ? "bg-green-500" : ''} className="w-full">
                     {post ? "Update" : "Submit"}
                 </Button>
+
             </div>
         </form>
     )

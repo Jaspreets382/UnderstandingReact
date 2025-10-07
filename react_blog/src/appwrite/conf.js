@@ -103,10 +103,12 @@ export class Service {
                 config.appwriteBucketId,
                 ID.unique(),
                 file
+                
             )
 
         } catch (error) {
             console.log('Service::uploadFile error')
+            console.log(error)
             return false
         }
     }
@@ -124,7 +126,7 @@ export class Service {
         }
     }
     getFilePrev(fileId) {
-        return this.bucket.getFilePreview(
+        return this.bucket.getFileView(
             config.appwriteBucketId,
             fileId
         )
